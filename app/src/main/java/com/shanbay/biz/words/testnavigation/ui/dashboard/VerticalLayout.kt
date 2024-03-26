@@ -49,7 +49,7 @@ class VerticalLayout @JvmOverloads constructor(
 
     private fun forceUniformWidth(heightMeasureSpec: Int) {
         val uniformWidthSpec = MeasureSpec.makeMeasureSpec(measuredWidth, MeasureSpec.EXACTLY)
-        for (i in 0..<childCount) {
+        for (i in 0 until childCount) {
             val child = getChildAt(i)
             val childLp = child.layoutParams
             if (childLp.width == LayoutParams.MATCH_PARENT) {
@@ -62,7 +62,7 @@ class VerticalLayout @JvmOverloads constructor(
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         var currentTop = paddingTop
-        for (i in 0..<childCount) {
+        for (i in 0 until childCount) {
             availableRect.set(
                 paddingLeft,
                 currentTop,
