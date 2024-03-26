@@ -7,6 +7,7 @@ import android.view.ViewConfiguration
 import android.widget.OverScroller
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.math.MathUtils
+import androidx.core.view.ViewCompat
 import kotlin.math.abs
 
 class HeaderBehavior<V : View> : CoordinatorLayout.Behavior<V>() {
@@ -20,6 +21,7 @@ class HeaderBehavior<V : View> : CoordinatorLayout.Behavior<V>() {
     private var touchSlop = -1
     private var scroller: OverScroller? = null
 
+    private var flingRunnable: FlingRunnable? = null
     private var velocityTracker: VelocityTracker? = null //速率
 
 
@@ -108,6 +110,31 @@ class HeaderBehavior<V : View> : CoordinatorLayout.Behavior<V>() {
         return super.onTouchEvent(parent, child, ev)
     }
 
+
+    private fun fling(
+        parent: CoordinatorLayout,
+        child: V,
+        minOffset: Int,
+        maxOffset: Int,
+        velocityY: Float
+    ):Boolean {
+        flingRunnable?.let {
+            child.removeCallbacks(it)
+            flingRunnable = null
+        }
+        if (scroller == null) {
+            scroller = OverScroller(child.context)
+        }
+        if (scroller!!.computeScrollOffset()) {
+            flingRunnable = FlingRunnable(parent, child)
+            ViewCompat.postOnAnimation(child, flingRunnable!!)
+            return true
+        } else {
+            //onFlingFinished(coordinatorLayout, layout)
+            return false
+        }
+    }
+
     private fun scroll(
         header: V,
         diffY: Int,
@@ -142,6 +169,22 @@ class HeaderBehavior<V : View> : CoordinatorLayout.Behavior<V>() {
         if (velocityTracker == null) {
             velocityTracker = VelocityTracker.obtain()
         }
+    }
+
+    inner class FlingRunnable(private val parent: CoordinatorLayout?, private val layout: V?) :
+        Runnable {
+
+        override fun run() {
+            if (layout != null && scroller != null) {
+                if (scroller!!.computeScrollOffset()) {
+                    setHeaderTopBottomOffset(layout, scroller!!.currY, getMaxDragOffset(layout), 0)
+                    ViewCompat.postOnAnimation(layout, this)
+                } else {
+                    //onFlingFinished(parent, layout)
+                }
+            }
+        }
+
     }
 
 }

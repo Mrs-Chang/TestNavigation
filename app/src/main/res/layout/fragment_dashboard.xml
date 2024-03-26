@@ -52,15 +52,11 @@
     <!--            android:text="我是跟随者"-->
     <!--            app:layout_behavior=".ui.dashboard.BrotherFollowBehavior" />-->
 
-    <TextView
-        android:layout_width="match_parent"
-        android:text="12131231"
-        android:layout_height="wrap_content"/>
-
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center">
+        android:gravity="center"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="match_parent"
@@ -72,11 +68,40 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:orientation="vertical"
+        app:divider="@drawable/ic_dashboard_black_24dp"
+        app:dividerPadding="88dp"
+        app:showDividers="middle">
+
+        <!-- 子视图 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="Item 1" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="Item 2" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="Item 3" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior=".ui.dashboard.HeaderScrollingViewBehavior" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
