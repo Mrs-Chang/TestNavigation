@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.Gravity
 import android.view.ViewGroup
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.GravityCompat
 
 class VerticalLayout @JvmOverloads constructor(
@@ -14,28 +15,48 @@ class VerticalLayout @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ViewGroup(context, attributeSet, defStyleAttr) {
     private val availableRect = Rect()
+    private var maxWidth = 0
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        var childMatchParent = false
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)
         var totalHeight = 0
-        var maxWidth = 0
         for (i in 0..<childCount) {
             val child = getChildAt(i)
-            //Log.d("VerticalLayout", "onMeasure: $i childLp.width = ${childLp.width}, childLp.height = ${childLp.height}")
-            //measureChild(child, widthMeasureSpec, heightMeasureSpec)
+            if (widthMode != MeasureSpec.EXACTLY && child.layoutParams.width == LayoutParams.MATCH_PARENT) {
+                childMatchParent = true
+            }
             measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0)
-            Log.d("VerticalLayout", "onMeasure: $i width = ${child.measuredWidth}, height = ${child.measuredHeight}")
             val childLp = child.layoutParams as MarginLayoutParams
+            Log.d(
+                "VerticalLayout",
+                "onMeasure: $i width = ${child.measuredWidth},lp.width:${childLp.width}, height = ${child.measuredHeight},lp.height:${childLp.height}"
+            )
             val childHeight = child.measuredHeight + childLp.topMargin + childLp.bottomMargin
             totalHeight += childHeight
-            maxWidth = maxWidth.coerceAtLeast(child.measuredWidth + childLp.leftMargin + childLp.rightMargin)
+            maxWidth =
+                maxWidth.coerceAtLeast(child.measuredWidth + childLp.leftMargin + childLp.rightMargin)
         }
-        // handle vertical padding
         totalHeight += paddingTop + paddingBottom
         setMeasuredDimension(
             resolveSize(maxWidth, widthMeasureSpec),
             resolveSize(totalHeight, heightMeasureSpec)
         )
+        if (childMatchParent) {
+            forceUniformWidth(heightMeasureSpec)
+        }
+    }
+
+    private fun forceUniformWidth(heightMeasureSpec: Int) {
+        val uniformWidthSpec = MeasureSpec.makeMeasureSpec(measuredWidth, MeasureSpec.EXACTLY)
+        for (i in 0..<childCount) {
+            val child = getChildAt(i)
+            val childLp = child.layoutParams
+            if (childLp.width == LayoutParams.MATCH_PARENT) {
+                measureChildWithMargins(child, uniformWidthSpec, 0, heightMeasureSpec, 0)
+                Log.d("VerticalLayout", "forceUniformWidth: childLp:${childLp.width}")
+            }
+        }
     }
 
 

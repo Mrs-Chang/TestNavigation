@@ -1,9 +1,10 @@
 <com.shanbay.biz.words.testnavigation.ui.dashboard.VerticalLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
-    android:orientation="vertical"
     android:layout_height="wrap_content"
-    android:background="#FF00FF">
+    android:background="#FF00FF"
+    android:orientation="vertical"
+    android:paddingVertical="10dp">
 
     <!-- 子视图 -->
     <TextView
@@ -12,6 +13,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:background="#FF0000"
+        android:gravity="center"
         android:text="Item 1" />
 
     <TextView
@@ -20,13 +22,14 @@
         android:layout_marginHorizontal="10dp"
         android:layout_marginTop="10dp"
         android:background="#00FF00"
+        android:gravity="center"
         android:text="Item 2" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
         android:background="#0000FF"
+        android:gravity="center"
         android:text="Item 3" />
 </com.shanbay.biz.words.testnavigation.ui.dashboard.VerticalLayout>
